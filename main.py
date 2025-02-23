@@ -28,6 +28,8 @@ def main():
 
     run_scraper()
 
+    logger.info(f"Next scheduled job scraping at {schedule.next_run()}")
+
     while True:
         schedule.run_pending()
         time.sleep(60)  # Check schedule every minute
