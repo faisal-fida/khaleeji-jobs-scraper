@@ -18,10 +18,7 @@ job-scraper
 │   │   └── config.py          # Configuration settings for the scraper
 │   └── utils
 │       ├── __init__.py        # Marks the utils directory as a package
-│       └── helpers.py         # Utility functions for data processing
-├── tests
-│   ├── __init__.py            # Marks the tests directory as a package
-│   └── test_scraper.py        # Unit tests for the JobScraper class
+│       └── helpers.py         # Utility functions for data 
 ├── data
 │   └── jobs.json              # JSON file to store scraped job data
 ├── requirements.txt            # Lists project dependencies
