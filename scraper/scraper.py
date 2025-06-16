@@ -1,13 +1,14 @@
-import requests
 import json
 import logging
-from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from requests.exceptions import RequestException
 from time import sleep
 
-from utils.helpers import clean_job_data
+import requests
+from bs4 import BeautifulSoup
+from requests.exceptions import RequestException
+
 from config.config import Config
+from utils.helpers import clean_job_data
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -43,7 +44,9 @@ class JobScraper:
         except RequestException as e:
             if retries < self.max_retries:
                 wait_time = self.retry_delay * (retries + 1)
-                self.logger.warning(f"Request failed: {str(e)}. Retrying in {wait_time} seconds...")
+                self.logger.warning(
+                    f"Request failed: {str(e)}. Retrying in {wait_time} seconds..."
+                )
                 sleep(wait_time)
                 return self._make_request(url, retries + 1)
             else:
@@ -101,7 +104,9 @@ class JobScraper:
 
                     current_urls = self.job_urls
                     if any(url in existing_urls for url in current_urls):
-                        self.logger.info("Found existing URL, stopping further scraping")
+                        self.logger.info(
+                            "Found existing URL, stopping further scraping"
+                        )
                         break
 
             new_urls = [url for url in self.job_urls if url not in existing_urls]
@@ -115,7 +120,8 @@ class JobScraper:
                 # Scrape job details using ThreadPoolExecutor
                 with ThreadPoolExecutor(max_workers=10) as executor:
                     future_to_url = {
-                        executor.submit(self.scrape_job_details, url): url for url in new_urls
+                        executor.submit(self.scrape_job_details, url): url
+                        for url in new_urls
                     }
 
                     for future in as_completed(future_to_url):
@@ -123,7 +129,9 @@ class JobScraper:
                         job = future.result()
                         if job:
                             job_data.append(job)
-                        self.logger.info(f"Progress: {completed}/{total_new_urls} jobs scraped")
+                        self.logger.info(
+                            f"Progress: {completed}/{total_new_urls} jobs scraped"
+                        )
 
                 job_data = [job for job in job_data if job]  # Remove None values
                 self.logger.info(f"Successfully scraped {len(job_data)} jobs")
